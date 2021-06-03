@@ -1,7 +1,14 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-    <!-- <div v-for='item in testData' :key='item.id'>{{item.}}</div> -->
+    <a-layout>
+      <a-layout-header
+        ><UserProfile :user="user"></UserProfile>
+      </a-layout-header>
+      <a-layout-content>
+        <TempleteList :list="testData" />
+      </a-layout-content>
+      <a-layout-footer>Footer</a-layout-footer>
+    </a-layout>
   </div>
 </template>
 
@@ -10,20 +17,25 @@
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store/index";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import TempleteList from "@/components/TempleteList.vue";
+import UserProfile from "@/components/UserProfile.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
-    HelloWorld,
+    TempleteList,
+    UserProfile,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     console.log(store);
     const testData = computed(() => store.state.templates);
+    const user = computed(() => store.state.user);
     console.log("testData", testData);
+
     return {
       testData,
+      user,
     };
   },
 });

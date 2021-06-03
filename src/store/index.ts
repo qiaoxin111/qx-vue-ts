@@ -1,25 +1,21 @@
 import { createStore } from "vuex";
-export interface UserProps {
-  isLogin: boolean;
-}
-export interface TemplateProps {
-  id: string;
-  coverImage: string;
-}
+import user, { UserProp } from './users' 
+import templates, {TemplatesProps} from './templetes'
+import editor, { EditorProps } from './editor'
+
 export interface GlobalDataProps {
-  templates: TemplateProps[];
-  user: UserProps;
+  templates: TemplatesProps[];
+  user: UserProp;
+  editor: EditorProps
 }
-const testData = [
-  { id: "1", coverImage: "" },
-  { id: "1", coverImage: "" },
-];
-const user = { isLogin: false };
+
+
 const store = createStore<GlobalDataProps>({
-  state: {
-    templates: testData,
-    user: user,
-  },
+  modules:{
+    user,
+    templates,
+    editor
+  }
 });
 
 export default store;
