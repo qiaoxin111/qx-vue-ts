@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(item, index) in list" :key="index" @click="addComponent(item)">
+  <div v-for="(item, index) in list" :key="index" @click="addComponent(item)" class="componentTemplate">
     <XTest v-bind="item"></XTest>
   </div>
 </template>
@@ -29,3 +29,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="less">
+.componentTemplate {
+  cursor: pointer;
+}
+</style>

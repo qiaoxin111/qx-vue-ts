@@ -21,9 +21,9 @@ const testComponents: ComponentData[] = [
     name: "x-text",
     props: { text: "hello", fontSize: "12px", color: "red" },
   },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "14px" } },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "16px" } },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "18px" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "14px", lineHeight: "1" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "16px", lineHeight: "2" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "18px", lineHeight: "1" } },
   {
     id: uuidv4(),
     name: "x-text",
@@ -40,6 +40,11 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     components: testComponents,
     currentElement: "",
+  },
+  getters: {
+    currentElement: (state) => {
+      return state.components.find((item) => item.id === state.currentElement);
+    },
   },
   mutations: {
     addComp(state, comp) {

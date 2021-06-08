@@ -13,5 +13,13 @@ export const defaultTemplates = [
     text: "链接内容",
     color: "#f00",
     tag: "p",
+    actionType: "url",
+    url: "https://www.baidu.com",
+  },
+  {
+    text: "按钮",
+    tag: "p",
+    backgroundColor: "#ff0",
+    color: "#fff",
   },
 ];
