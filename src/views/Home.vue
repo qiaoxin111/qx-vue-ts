@@ -1,9 +1,7 @@
 <template>
   <div class="home">
     <a-layout>
-      <a-layout-header
-        ><UserProfile :user="user"></UserProfile>
-      </a-layout-header>
+      <a-layout-header><UserProfile :user="user"></UserProfile> </a-layout-header>
       <a-layout-content>
         <TempleteList :list="testData" />
       </a-layout-content>
@@ -31,7 +29,8 @@ export default defineComponent({
     console.log(store);
     const testData = computed(() => store.state.templates);
     const user = computed(() => store.state.user);
-    console.log("testData", testData);
+    console.log("user", user);
+    console.log("testData");
 
     return {
       testData,

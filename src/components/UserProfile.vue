@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button v-if="!user.isLogin" type="primary" @click="login"
-      >登录{{ user }}</a-button
+      >登录111{{ user }}</a-button
     >
     <a-dropdown v-else>
       <a-button type="primary"> {{ user.name }} <DownOutlined /></a-button>
@@ -18,6 +18,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { UserProp } from "@/store/users";
 
 export default defineComponent({
@@ -28,11 +29,12 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    console.log(props.user);
+  setup() {
     const store = useStore();
+    const router = useRouter();
     const login = () => {
       store.commit("login");
+      router.push({ path: "/editor" });
     };
     const logOut = () => {
       store.commit("logout");
