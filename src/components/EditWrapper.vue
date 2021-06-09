@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 export default defineComponent({
   props: {
     id: {
@@ -19,7 +19,7 @@ export default defineComponent({
   },
   emits: ["changeCurEle"],
   setup(props, context) {
-    const store = useStore();
+    // const store = useStore();
     const changeCurrentComponent = () => {
       context.emit("changeCurEle", props.id);
     };

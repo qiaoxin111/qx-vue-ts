@@ -12,7 +12,7 @@ export interface ComponentData {
 
 export interface EditorProps {
   components: ComponentData[];
-  currentElement: string;
+  currentElementId: string;
 }
 
 const testComponents: ComponentData[] = [
@@ -21,9 +21,9 @@ const testComponents: ComponentData[] = [
     name: "x-text",
     props: { text: "hello", fontSize: "12px", color: "red" },
   },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "14px", lineHeight: "1" } },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "16px", lineHeight: "2" } },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "18px", lineHeight: "1" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello1", fontSize: "14px", lineHeight: "1", textAlign: "center" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello2", fontSize: "18px", lineHeight: "2", textAlign: "left" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello3", fontSize: "14px", lineHeight: "1", fontFamily: "SimSun" } },
   {
     id: uuidv4(),
     name: "x-text",
@@ -39,11 +39,11 @@ const testComponents: ComponentData[] = [
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     components: testComponents,
-    currentElement: "",
+    currentElementId: "",
   },
   getters: {
     currentElement: (state) => {
-      return state.components.find((item) => item.id === state.currentElement);
+      return state.components.find((item) => item.id === state.currentElementId);
     },
   },
   mutations: {
@@ -51,7 +51,6 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       const newComp = {
         id: uuidv4(),
         name: "x-text",
-        // ...comp,
         props: {
           ...comp,
         },
@@ -59,7 +58,14 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.components.push(newComp);
     },
     changeCurEle(state, curEleId: string) {
-      state.currentElement = curEleId;
+      state.currentElementId = curEleId;
+    },
+    propChange(state, { key, value }) {
+      // getters中的值在mutations中不可以直接用，需要重新写一遍。 要判断一下currentElement，但是不能用?.
+      const currentElement = state.components.find((item) => item.id === state.currentElementId);
+      if (currentElement) {
+        currentElement.props[key] = value;
+      }
     },
   },
 };

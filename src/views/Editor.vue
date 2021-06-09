@@ -22,13 +22,14 @@
       </a-col>
       <a-col class="wraper" :span="6">
         <div class="title">组件属性</div>
-        <FormTablue v-if="currentElememt" :props="currentElememt.props"></FormTablue>
+        {{ currentElement }}
+        <FormTablue v-if="currentElement" :props="currentElement.props" @change="propChange"></FormTablue>
       </a-col>
     </a-row>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, onUpdated, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { ComponentData } from "@/store/editor";
 import { defaultTemplates } from "@/defaultTemplate";
@@ -48,23 +49,29 @@ export default defineComponent({
   setup() {
     const store = useStore();
     // TODO 这里为什么不能自动补全
+
     const componentDataList = computed<ComponentData[]>(() => store.state.editor.components);
-    const currentCompId = computed(() => store.state.editor.currentElement);
-    const currentElememt = computed(() => store.getters.currentElement);
-    console.log("当前的", currentElememt);
+    const currentCompId = computed(() => store.state.editor.currentElementId);
+    const currentElement = computed(() => store.getters.currentElement);
+
+    console.log("当前的", currentElement);
     const addItem = (props: any) => {
       store.commit("addComp", props);
     };
     const changeCurEle = (id: string) => {
       store.commit("changeCurEle", id);
     };
+    const propChange = (data: any) => {
+      store.commit("propChange", data);
+    };
     return {
-      currentElememt,
+      currentElement,
       currentCompId,
       componentDataList,
       defaultTemplates,
       addItem,
       changeCurEle,
+      propChange,
     };
   },
 });
