@@ -1,5 +1,6 @@
 <template>
   <div class="editor">
+    <Upload></Upload>
     <a-row>
       <a-col class="wraper" :span="6">
         组件列表
@@ -36,6 +37,7 @@ import ComponentLists from "@/components/ComponentList.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
+import Upload from "@/components/Upload.vue";
 
 export default defineComponent({
   components: {
@@ -43,6 +45,7 @@ export default defineComponent({
     ComponentLists,
     EditWrapper,
     FormTablue,
+    Upload,
   },
 
   setup() {
@@ -69,7 +72,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .editor {
   .wraper {
     display: block;

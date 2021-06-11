@@ -21,8 +21,8 @@ const testComponents: ComponentData[] = [
     name: "x-text",
     props: { text: "hello", fontSize: "12px", color: "red" },
   },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "14px", lineHeight: "1" } },
-  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "16px", lineHeight: "2" } },
+  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "14px", lineHeight: "1" , textAlign: 'center'} },
+  { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "16px", lineHeight: "2" , textAlign: 'left'} },
   { id: uuidv4(), name: "x-text", props: { text: "hello", fontSize: "18px", lineHeight: "1" } },
   {
     id: uuidv4(),

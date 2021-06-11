@@ -1,14 +1,17 @@
 import { defaultPropsType } from "./defaultProps";
 
-export type PropsFormType = {
-  [P in keyof defaultPropsType]?: {
+export interface propFormType {
     component: string;
     value?: string;
     text: string;
     extraProps?: {
       [key: string]: any;
     };
-  };
+    initialTransform?: (v:string) => any 
+}
+
+export type PropsFormType = {
+  [P in keyof defaultPropsType]?: propFormType
 };
 
 export const propsForm: PropsFormType = {
@@ -28,5 +31,9 @@ export const propsForm: PropsFormType = {
       max: 3,
       step: 0.1,
     },
+    initialTransform : (v) => parseFloat(v)
   },
+  // textAlign: {
+
+  // }
 };

@@ -30,7 +30,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .active {
   border: 1px solid red;
 }

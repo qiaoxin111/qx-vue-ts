@@ -24,7 +24,7 @@ export default defineComponent({
       const newKey = key as keyof PropsFormType;
       const item = propsForm[newKey];
       if (item) {
-        item.value = value;
+        item.value = item.initialTransform ? item.initialTransform(value) : value;
         formTableList.push(item);
       }
     });
@@ -34,7 +34,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .prop {
   display: flex;
   margin-bottom: 10px;
