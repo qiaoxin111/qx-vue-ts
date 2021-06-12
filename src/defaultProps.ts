@@ -21,6 +21,7 @@ export const defaultProps = {
   text: "正文内容",
   fontSize: "12px",
   fontStyle: "normal",
+  fontFamily: "SimSun",
   lineHeight: "1",
   textAlign: "left",
   color: "#000",

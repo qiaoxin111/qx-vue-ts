@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <Upload></Upload>
+    <Upload :beforeUpload="beforeUpload" :> </Upload>
     <a-row>
       <a-col class="wraper" :span="6">
         组件列表
@@ -23,7 +23,8 @@
       </a-col>
       <a-col class="wraper" :span="6">
         <div class="title">组件属性</div>
-        <FormTablue v-if="currentElememt" :props="currentElememt.props"></FormTablue>
+        {{ currentElement }}
+        <FormTablue v-if="currentElement" :props="currentElement.props" @change="propChange"></FormTablue>
       </a-col>
     </a-row>
   </div>
@@ -51,23 +52,45 @@ export default defineComponent({
   setup() {
     const store = useStore();
     // TODO 这里为什么不能自动补全
+
     const componentDataList = computed<ComponentData[]>(() => store.state.editor.components);
-    const currentCompId = computed(() => store.state.editor.currentElement);
-    const currentElememt = computed(() => store.getters.currentElement);
-    console.log("当前的", currentElememt);
+    const currentCompId = computed(() => store.state.editor.currentElementId);
+    const currentElement = computed(() => store.getters.currentElement);
+
+    console.log("当前的", currentElement);
     const addItem = (props: any) => {
       store.commit("addComp", props);
     };
     const changeCurEle = (id: string) => {
       store.commit("changeCurEle", id);
     };
+    const propChange = (data: any) => {
+      store.commit("propChange", data);
+    };
+    const beforeUpload = (file: File) => {
+      console.log("file", file);
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 0.1;
+      if (!isJPG) {
+        alert("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        alert("上传头像图片大小不能超过 2MB!");
+      }
+      return new Promise((resolve, reject) => {
+        reject("err");
+      });
+    };
+    
     return {
-      currentElememt,
+      currentElement,
       currentCompId,
       componentDataList,
       defaultTemplates,
       addItem,
       changeCurEle,
+      propChange,
+      beforeUpload,
     };
   },
 });
