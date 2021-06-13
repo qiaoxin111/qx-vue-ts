@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <Upload :beforeUpload="beforeUpload" :> </Upload>
+    <TextUpload></TextUpload>
     <a-row>
       <a-col class="wraper" :span="6">
         组件列表
@@ -38,15 +38,14 @@ import ComponentLists from "@/components/ComponentList.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
-import Upload from "@/components/Upload.vue";
-
+import TextUpload from "@/components/TextUpload.vue";
 export default defineComponent({
   components: {
     XText,
     ComponentLists,
     EditWrapper,
     FormTablue,
-    Upload,
+    TextUpload,
   },
 
   setup() {
@@ -67,21 +66,7 @@ export default defineComponent({
     const propChange = (data: any) => {
       store.commit("propChange", data);
     };
-    const beforeUpload = (file: File) => {
-      console.log("file", file);
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 0.1;
-      if (!isJPG) {
-        alert("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        alert("上传头像图片大小不能超过 2MB!");
-      }
-      return new Promise((resolve, reject) => {
-        reject("err");
-      });
-    };
-    
+
     return {
       currentElement,
       currentCompId,
@@ -90,7 +75,6 @@ export default defineComponent({
       addItem,
       changeCurEle,
       propChange,
-      beforeUpload,
     };
   },
 });

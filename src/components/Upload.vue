@@ -8,45 +8,99 @@
     <input type="file" ref="fileInput" :style="{ display: 'none' }" @change="handleChange" />
     <slot name="displayMode">
       <div v-for="(item, index) in uploadList" :key="index" :class="`uploadFile upload-${item.status}`">
-        <span>{{ item.name }} -- {{ item.status }}</span>
-        <span @click="deleteFile(item.id)">delete</span>
+        <div>{{ index }}</div>
+        <div class="uploadForShow uploadType-text" v-if="listType === 'text'">
+          <div v-if="item.status === 'uploading'">
+            <span class="upload-fileName">{{ item.name }} </span>
+            <a-progress class="upload-progress" :percent="item.percent" />
+            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
+          </div>
+          <div v-else>
+            <span class="upload-fileName">{{ item.name }} </span>
+            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
+          </div>
+        </div>
+        <div class="uploadForShow uploadType-picture" v-else-if="listType === 'picture'">
+          <div v-if="item.status === 'uploading'">
+            <img :src="item.url" alt="" />
+            <span>{{ item.name }}</span>
+          </div>
+          <div v-else>
+            <img :src="item.url" alt="" />
+            <span>{{ item.name }}</span>
+            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
+          </div>
+        </div>
       </div>
     </slot>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, PropType } from "vue";
+import { computed, defineComponent, reactive, ref, PropType, toRefs } from "vue";
 import axios, { AxiosRequestConfig } from "axios";
 import { v4 as uuid } from "uuid";
 
-interface FileObjectType {
-  id: string;
-  size: number;
-  status: string;
+export interface FileObjectType {
+  id?: string;
+  size?: number;
+  status?: string;
   name: string;
-  file: File;
+  percent?: number;
+  file?: File;
+  url?: string;
 }
 
 type ConfigType = AxiosRequestConfig;
-
+type listTypeType = "text" | "picture";
 export default defineComponent({
   props: {
     action: {
       type: String,
       default: "http://localhost:3000/upload",
     },
+    showFileList: {
+      type: Boolean,
+      default: true,
+    },
+    listType: {
+      type: String as PropType<listTypeType>,
+      default: "text",
+    },
+    fileList: {
+      type: Array as PropType<{ id?: string; url?: string; name: string; file?: File; status?: string }[]>,
+      default: () => [],
+    },
     beforeUpload: {
       type: Function as PropType<(file: File) => boolean | Promise<boolean>>,
     },
     onProgress: {
-      type: Function as PropType<() => void>,
+      type: Function as PropType<(e: ProgressEvent, file: File, fileList: FileObjectType[]) => void>,
+    },
+    onSuccess: {
+      type: Function as PropType<(res: any, file: FileObjectType, filelist: FileObjectType[]) => void>,
+    },
+    onError: {
+      type: Function as PropType<(err: Error, file: FileObjectType, filelist: FileObjectType[]) => void>,
     },
   },
   setup(props) {
     const fileInput = ref<HTMLInputElement | null>(null);
-
-    const uploadList = ref<FileObjectType[]>([]);
+    // const listForshow = ref<FileObjectType[]>();
+    const fileList = computed(() => {
+      console.log(1111111);
+      console.log("props.fileList", props.fileList);
+      return props.fileList.map((item) => {
+        item.id = item.id ?? uuid();
+        item.status = "success";
+        if (!item.url && item.file) {
+          item.url = URL.createObjectURL(item.file);
+        }
+        return item;
+      });
+    });
+    const uploadList = reactive(fileList);
+    console.log("uploadList", uploadList);
     const uploadStatus = computed(() => {
       return uploadList.value.some((item) => item.status === "uploading");
     });
@@ -59,8 +113,8 @@ export default defineComponent({
     };
 
     const handleChange = async (evt: any) => {
-      const fileList = evt.target.files;
-      const file = fileList[0];
+      const files = evt.target.files;
+      const file = files[0];
       const formdata = new FormData();
       formdata.append("name", file.name);
       formdata.append("file", file);
@@ -70,45 +124,59 @@ export default defineComponent({
         name: file.name,
         size: file.size,
         status: "uploading",
+        percent: 0,
         file,
+        url: URL.createObjectURL(file),
       });
 
       if (props.beforeUpload) {
         try {
           const result = await props.beforeUpload(file);
           if (!result) {
-            // message 上传失败
+            console.log("上传失败：beforeupload");
             return;
           }
         } catch (e) {
-          // message 上传失败
+          console.log("上传失败：beforeupload");
           return;
         }
       }
 
       uploadList.value.push(uploadFile);
+      console.log("增加一条", uploadList);
+
+      const onUploadProgress = (progress: ProgressEvent) => {
+        uploadFile.percent = Math.floor((progress.loaded * 100) / progress.total);
+        if (props.onProgress) {
+          // props.onProgress(progress, file, uploadList);
+        }
+      };
 
       const config: ConfigType = {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: onUploadProgress,
       };
 
-      if (props.onProgress) {
-        config.onUploadProgress = props.onProgress;
-      }
-
-      console.log(config);
-
-      axios.post(props.action, formdata, config).then((res) => {
-        if (res.status === 200) {
-          uploadFile.status = "success";
-          console.log(1111, uploadFile);
-        } else {
+      axios
+        .post(props.action, formdata, config)
+        .then((res) => {
+          if (res.status === 200) {
+            uploadFile.status = "success";
+            console.log(1111, uploadList);
+            if (props.onSuccess) {
+              // props.onSuccess(res, uploadFile, uploadList);
+            }
+          }
+          if (fileInput.value) {
+            fileInput.value.value = "";
+          }
+        })
+        .catch((err) => {
           uploadFile.status = "failed";
-        }
-        if (fileInput.value) {
-          fileInput.value.value = "";
-        }
-      });
+          if (props.onError) {
+            // props.onError(err, uploadFile, uploadList);
+          }
+        });
     };
 
     const deleteFile = (id: string) => {
@@ -129,6 +197,10 @@ export default defineComponent({
 </script>
 <style scoped lang="less">
 .upload {
+  width: 400px;
+  .uploadFile {
+    display: flex;
+  }
   .upload-uploading span {
     color: yellow;
   }
