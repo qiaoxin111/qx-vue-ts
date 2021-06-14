@@ -9,6 +9,7 @@
       <el-button size="small" type="primary">点击上传3333</el-button>
     </el-upload>
     <Upload
+      :multiple="false"
       :drag="true"
       :fileList="fileList"
       :beforeUpload="beforeUpload"
@@ -16,7 +17,7 @@
       :onSuccess="onSuccess"
     >
       <!-- <template v-slot:displayMode> jalksjdkaljdkaljdkl </template> -->
-      <template v-slot:displayMode>222222</template>
+      <!-- <template v-slot:displayMode>222222</template> -->
     </Upload>
   </div>
 </template>
@@ -64,7 +65,7 @@ export default defineComponent({
     };
     const onSuccess = (res: any, file: uplodFileType) => {
       console.log("onsuccess", res, file);
-      fileList.push(res.data);
+      // fileList.push(res.data);
     };
     const eleOnSuccess = (response: any, file: File, fileList: FileList) => {
       console.log("res", response);

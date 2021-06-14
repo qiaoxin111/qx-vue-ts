@@ -2,17 +2,20 @@
   <div class="upload">
     <div class="uploadArea" @click="triggerClick" :disabled="uploadStatus">
       <slot name="toUpload">
-        <div
-          class="dragArea"
-          :class="{ dragOver: drag & isDrageOver }"
-          @dragover="dragMove($event, true)"
-          @dragleave="dragMove($event, false)"
-        >
-          <button>点击上传11</button>
+        <div v-if="drag">
+          <div
+            class="dragArea"
+            :class="{ dragOver: drag & isDrageOver }"
+            @dragover="dragMove($event, true)"
+            @dragleave="dragMove($event, false)"
+            @drop="dropEvent"
+          >
+            <button>点击上传或者拖拽上传</button>
+          </div>
         </div>
       </slot>
     </div>
-    <input type="file" ref="fileInput" :style="{ display: 'none' }" @change="handleChange" />
+    <input type="file" :multiple="mutiple" ref="fileInput" :style="{ display: 'none' }" @change="handleChange" />
     <UploadList :listType="listType" :uploadList="uploadList" @deleteFile="deleteFile">
       <template v-slot:displayMode>
         <slot name="displayMode"></slot>
@@ -22,10 +25,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, PropType } from "vue";
+import { computed, defineComponent, reactive, ref, PropType, watch } from "vue";
 import axios, { AxiosRequestConfig } from "axios";
 import { v4 as uuid } from "uuid";
 import UploadList from "./UoloadList.vue";
+import { cloneDeep } from "lodash-es";
 
 export interface FileObjectType {
   id?: string;
@@ -49,6 +53,10 @@ export default defineComponent({
     UploadList,
   },
   props: {
+    multiple: {
+      type: Boolean,
+      default: true,
+    },
     drag: {
       type: Boolean,
       default: false,
@@ -84,19 +92,27 @@ export default defineComponent({
   },
   setup(props) {
     const fileInput = ref<HTMLInputElement | null>(null);
+    const uploadList = ref<uplodFileType[]>([]);
     let isDrageOver = ref(false);
-    const uploadList = computed<uplodFileType[]>(() => {
-      return props.fileList.map((item) => {
-        item.id = item.id ?? uuid();
-        item.status = "success";
-        if (!item.url && item.file) {
-          item.url = URL.createObjectURL(item.file);
-        }
-        return item;
-      });
-    });
 
-    // const uploadList = fileList;
+    // 即便上传文件的时候父组件没有传入新的fileList,uploadList 也应该是响应式的，
+    watch(
+      () => props.fileList,
+      (fileList: uplodFileType[]) => {
+        uploadList.value = fileList.map((file) => {
+          const cloneFile = cloneDeep(file);
+          return {
+            ...cloneFile,
+            uid: file.id || uuid(),
+            status: file.status || "success",
+          };
+        });
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    );
 
     console.log("uploadList", uploadList);
     const uploadStatus = computed(() => {
@@ -110,9 +126,7 @@ export default defineComponent({
       }
     };
 
-    const handleChange = async (evt: any) => {
-      const files = evt.target.files;
-      const file = files[0];
+    const postUoload = async (file: File) => {
       const formdata = new FormData();
       formdata.append("name", file.name);
       formdata.append("file", file);
@@ -176,6 +190,11 @@ export default defineComponent({
           }
         });
     };
+    const handleChange = (evt: Event) => {
+      const files = (evt.target as HTMLInputElement).files;
+      if (!files) return;
+      isMutileUpload(files);
+    };
 
     const deleteFile = (id: string) => {
       const index = uploadList.value.findIndex((item) => (item.id = id));
@@ -188,6 +207,28 @@ export default defineComponent({
       isDrageOver.value = enter;
     };
 
+    const isMutileUpload = (files: FileList) => {
+      if (!files) return;
+      if (props.multiple) {
+        const postFiles = Array.from(files);
+        postFiles.forEach((file) => {
+          postUoload(file);
+        });
+      } else {
+        const file = files[0];
+        postUoload(file);
+      }
+    };
+
+    const dropEvent = (evt: DragEvent) => {
+      evt.preventDefault();
+      console.log("drag数据", evt.dataTransfer);
+      const files = evt.dataTransfer?.files;
+      console.log("files", files);
+      if (!files) return;
+      isMutileUpload(files);
+    };
+
     return {
       uploadStatus,
       fileInput,
@@ -197,6 +238,8 @@ export default defineComponent({
       deleteFile,
       isDrageOver,
       dragMove,
+      dropEvent,
+      isMutileUpload,
     };
   },
 });
