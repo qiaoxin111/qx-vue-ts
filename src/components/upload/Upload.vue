@@ -2,49 +2,35 @@
   <div class="upload">
     <div class="uploadArea" @click="triggerClick" :disabled="uploadStatus">
       <slot name="toUpload">
-        <button>点击上传11</button>
+        <div
+          class="dragArea"
+          :class="{ dragOver: drag & isDrageOver }"
+          @dragover="dragMove($event, true)"
+          @dragleave="dragMove($event, false)"
+        >
+          <button>点击上传11</button>
+        </div>
       </slot>
     </div>
     <input type="file" ref="fileInput" :style="{ display: 'none' }" @change="handleChange" />
-    <slot name="displayMode">
-      <div v-for="(item, index) in uploadList" :key="index" :class="`uploadFile upload-${item.status}`">
-        <div>{{ index }}</div>
-        <div class="uploadForShow uploadType-text" v-if="listType === 'text'">
-          <div v-if="item.status === 'uploading'">
-            <span class="upload-fileName">{{ item.name }} </span>
-            <a-progress class="upload-progress" :percent="item.percent" />
-            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
-          </div>
-          <div v-else>
-            <span class="upload-fileName">{{ item.name }} </span>
-            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
-          </div>
-        </div>
-        <div class="uploadForShow uploadType-picture" v-else-if="listType === 'picture'">
-          <div v-if="item.status === 'uploading'">
-            <img :src="item.url" alt="" />
-            <span>{{ item.name }}</span>
-          </div>
-          <div v-else>
-            <img :src="item.url" alt="" />
-            <span>{{ item.name }}</span>
-            <span class="upload-delete" @click="deleteFile(item.id)">delete</span>
-          </div>
-        </div>
-      </div>
-    </slot>
+    <UploadList :listType="listType" :uploadList="uploadList" @deleteFile="deleteFile">
+      <template v-slot:displayMode>
+        <slot name="displayMode"></slot>
+      </template>
+    </UploadList>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, PropType, toRefs } from "vue";
+import { computed, defineComponent, reactive, ref, PropType } from "vue";
 import axios, { AxiosRequestConfig } from "axios";
 import { v4 as uuid } from "uuid";
+import UploadList from "./UoloadList.vue";
 
 export interface FileObjectType {
   id?: string;
   size?: number;
-  status?: string;
+  status: string;
   name: string;
   percent?: number;
   file?: File;
@@ -52,9 +38,21 @@ export interface FileObjectType {
 }
 
 type ConfigType = AxiosRequestConfig;
-type listTypeType = "text" | "picture";
+export type listTypeType = "text" | "picture";
+
+export type uplodFileType = Partial<FileObjectType> & {
+  name: string;
+};
+
 export default defineComponent({
+  components: {
+    UploadList,
+  },
   props: {
+    drag: {
+      type: Boolean,
+      default: false,
+    },
     action: {
       type: String,
       default: "http://localhost:3000/upload",
@@ -68,17 +66,17 @@ export default defineComponent({
       default: "text",
     },
     fileList: {
-      type: Array as PropType<{ id?: string; url?: string; name: string; file?: File; status?: string }[]>,
+      type: Array as PropType<uplodFileType[]>,
       default: () => [],
     },
     beforeUpload: {
       type: Function as PropType<(file: File) => boolean | Promise<boolean>>,
     },
     onProgress: {
-      type: Function as PropType<(e: ProgressEvent, file: File, fileList: FileObjectType[]) => void>,
+      type: Function as PropType<(e: ProgressEvent, file: FileObjectType, fileList: FileObjectType[]) => void>,
     },
     onSuccess: {
-      type: Function as PropType<(res: any, file: FileObjectType, filelist: FileObjectType[]) => void>,
+      type: Function as PropType<(res: any, file: FileObjectType, filelist: uplodFileType[]) => void>,
     },
     onError: {
       type: Function as PropType<(err: Error, file: FileObjectType, filelist: FileObjectType[]) => void>,
@@ -86,10 +84,8 @@ export default defineComponent({
   },
   setup(props) {
     const fileInput = ref<HTMLInputElement | null>(null);
-    // const listForshow = ref<FileObjectType[]>();
-    const fileList = computed(() => {
-      console.log(1111111);
-      console.log("props.fileList", props.fileList);
+    let isDrageOver = ref(false);
+    const uploadList = computed<uplodFileType[]>(() => {
       return props.fileList.map((item) => {
         item.id = item.id ?? uuid();
         item.status = "success";
@@ -99,7 +95,9 @@ export default defineComponent({
         return item;
       });
     });
-    const uploadList = reactive(fileList);
+
+    // const uploadList = fileList;
+
     console.log("uploadList", uploadList);
     const uploadStatus = computed(() => {
       return uploadList.value.some((item) => item.status === "uploading");
@@ -147,9 +145,9 @@ export default defineComponent({
 
       const onUploadProgress = (progress: ProgressEvent) => {
         uploadFile.percent = Math.floor((progress.loaded * 100) / progress.total);
-        if (props.onProgress) {
-          // props.onProgress(progress, file, uploadList);
-        }
+        // if (props.onProgress) {
+        //   props.onProgress(progress, file, uploadList);
+        // }
       };
 
       const config: ConfigType = {
@@ -162,9 +160,9 @@ export default defineComponent({
         .then((res) => {
           if (res.status === 200) {
             uploadFile.status = "success";
-            console.log(1111, uploadList);
+            console.log("更新l", uploadList);
             if (props.onSuccess) {
-              // props.onSuccess(res, uploadFile, uploadList);
+              props.onSuccess(res, uploadFile, uploadList.value);
             }
           }
           if (fileInput.value) {
@@ -184,6 +182,12 @@ export default defineComponent({
       uploadList.value.splice(index, 1);
     };
 
+    const dragMove = (evt: DragEvent, enter: boolean) => {
+      console.log(33333);
+      evt.preventDefault();
+      isDrageOver.value = enter;
+    };
+
     return {
       uploadStatus,
       fileInput,
@@ -191,6 +195,8 @@ export default defineComponent({
       triggerClick,
       handleChange,
       deleteFile,
+      isDrageOver,
+      dragMove,
     };
   },
 });
@@ -198,6 +204,20 @@ export default defineComponent({
 <style scoped lang="less">
 .upload {
   width: 400px;
+  .uploadArea {
+    .dragArea {
+      width: 200px;
+      height: 200px;
+      border: 1px dashed #aaa;
+      &:hover {
+        border-color: blue;
+      }
+      &.dragOver {
+        border-color: blue;
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+    }
+  }
   .uploadFile {
     display: flex;
   }

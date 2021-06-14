@@ -8,14 +8,23 @@
     >
       <el-button size="small" type="primary">点击上传3333</el-button>
     </el-upload>
-    <Upload :fileList="fileList" :beforeUpload="beforeUpload" :onProgress="onprgress" :onSuccess="onSuccess"> </Upload>
+    <Upload
+      :drag="true"
+      :fileList="fileList"
+      :beforeUpload="beforeUpload"
+      :onProgress="onprgress"
+      :onSuccess="onSuccess"
+    >
+      <!-- <template v-slot:displayMode> jalksjdkaljdkaljdkl </template> -->
+      <template v-slot:displayMode>222222</template>
+    </Upload>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
-import Upload from "@/components/Upload.vue";
+import Upload from "@/components/upload/Upload.vue";
 
-import { FileObjectType } from "@/components/Upload.vue";
+import { uplodFileType } from "@/components/upload/Upload.vue";
 
 interface fileShowType {
   url: string;
@@ -53,8 +62,9 @@ export default defineComponent({
     const onprgress = (progress: ProgressEvent) => {
       console.log("onprogress", progress);
     };
-    const onSuccess = (res: any, file: FileObjectType) => {
+    const onSuccess = (res: any, file: uplodFileType) => {
       console.log("onsuccess", res, file);
+      fileList.push(res.data);
     };
     const eleOnSuccess = (response: any, file: File, fileList: FileList) => {
       console.log("res", response);
