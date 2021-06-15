@@ -12,6 +12,8 @@
     "@types/lodash-es": "^4.17.4",
     "@types/uuid": "^8.3.0",
     "ant-design-vue": "^2.1.6",
+    "axios": "^0.21.1",
+    "element-plus": "^1.0.2-beta.48",
     "lodash-es": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",

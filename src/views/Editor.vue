@@ -1,9 +1,9 @@
 <template>
   <div class="editor">
-    <Test></Test>
+    <TextUpload></TextUpload>
     <a-row>
       <a-col class="wraper" :span="6">
-        组件列表
+        <h3>组件列表</h3>
         <ComponentLists :list="defaultTemplates" @onItemClick="addItem"></ComponentLists>
       </a-col>
       <a-col :span="12" class="draw-content">
@@ -38,15 +38,14 @@ import ComponentLists from "@/components/ComponentList.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
-import Test from "@/components/test.vue";
-
+import TextUpload from "@/components/TextUpload.vue";
 export default defineComponent({
   components: {
     XText,
     ComponentLists,
     EditWrapper,
     FormTablue,
-    Test,
+    TextUpload,
   },
 
   setup() {
@@ -59,6 +58,7 @@ export default defineComponent({
 
     console.log("当前的", currentElement);
     const addItem = (props: any) => {
+      console.log("props", props);
       store.commit("addComp", props);
     };
     const changeCurEle = (id: string) => {
@@ -67,6 +67,7 @@ export default defineComponent({
     const propChange = (data: any) => {
       store.commit("propChange", data);
     };
+
     return {
       currentElement,
       currentCompId,
@@ -79,7 +80,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .editor {
   .wraper {
     display: block;

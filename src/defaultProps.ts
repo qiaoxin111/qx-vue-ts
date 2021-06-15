@@ -43,25 +43,6 @@ test(obj);
 export const pickStyleProps = <T extends defaultPropsType>(props: T) =>
   without(Object.keys(props), "actionType", "url");
 
-// const mapValues = <T extends Partial<defaultPropsType>, K extends keyof T>(
-//   props: T
-// ): {
-//   [key in K]: {
-//     type: () => void;
-//     value: string;
-//   };
-// } => {
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   const result = {} as any;
-//   Object.entries(props).forEach(([key, value]) => {
-//     result[key] = {
-//       type: value && value.constructor,
-//       value: value,
-//     };
-//   });
-//   return result;
-// };
-
 export const transformToComponentProps = (props: defaultPropsType) => {
   return mapValues(props, (item) => {
     return {

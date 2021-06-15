@@ -52,9 +52,10 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   },
   mutations: {
     addComp(state, comp) {
+      const name = comp.tag === "img" ? "x-image" : "x-text";
       const newComp = {
         id: uuidv4(),
-        name: "x-text",
+        name: name,
         props: {
           ...comp,
         },

@@ -1,4 +1,15 @@
-export const defaultTemplates = [
+export interface templateType {
+  text: string;
+  tag: string;
+  fontSize?: string;
+  fontWeight?: string;
+  color?: string;
+  actionType?: string;
+  url?: string;
+  backgroundColor?: string;
+  src?: string;
+}
+export const defaultTemplates: templateType[] = [
   {
     text: "大标题",
     fontSize: "30px",
@@ -21,5 +32,10 @@ export const defaultTemplates = [
     tag: "p",
     backgroundColor: "#ff0",
     color: "#fff",
+  },
+  {
+    text: "图片",
+    tag: "img",
+    src: "@/assets/logo.png",
   },
 ];

@@ -68,7 +68,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .prop {
   display: flex;
   margin-bottom: 10px;
