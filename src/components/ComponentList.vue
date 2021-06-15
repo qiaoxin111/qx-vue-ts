@@ -1,12 +1,14 @@
 <template>
   <div v-for="(item, index) in list" :key="index" @click="addComponent(item)" class="componentTemplate">
     <!-- <XTest v-bind="item"></XTest> -->
-    <div>{{ item.text }}</div>
+    <Upload v-if="item.tag === 'img'" :showFileList="false" :onSuccess="onSuccess"></Upload>
+    <div v-else>{{ item.text }}</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import { templateType } from "@/defaultTemplate";
+import Upload from "@/components/upload/Upload.vue";
 // import XTest from "@/components/XText.vue";
 
 export default defineComponent({
@@ -17,16 +19,31 @@ export default defineComponent({
     },
   },
   components: {
+    Upload,
     // XTest,
   },
   emits: ["on-item-click"],
   setup(props, context) {
+    const currentProp = ref<templateType | null>(null);
     const addComponent = (data: any) => {
-      console.log("commit");
-      context.emit("on-item-click", data);
+      currentProp.value = data;
+      console.log("增加", data);
+      // console.log("commit");
+      if (data.tag !== "img") {
+        context.emit("on-item-click", data);
+      }
+    };
+    const onSuccess = (res: any) => {
+      const url = res.data.url;
+      if (currentProp.value) {
+        currentProp.value.src = url;
+      }
+      context.emit("on-item-click", currentProp.value);
+      // console.log("上传接口返回值", res);
     };
     return {
       addComponent,
+      onSuccess,
     };
   },
 });

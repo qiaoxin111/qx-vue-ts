@@ -1,12 +1,13 @@
 import { GlobalDataProps } from "./index";
 import { Module } from "vuex";
 import { v4 as uuidv4 } from "uuid";
+import { AllPropsType } from "@/defaultProps";
 
 export interface ComponentData {
   id: string;
   name: string;
   props: {
-    [key: string]: string;
+    [P in keyof AllPropsType]?: AllPropsType[P];
   };
 }
 
@@ -63,13 +64,16 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.components.push(newComp);
     },
     changeCurEle(state, curEleId: string) {
+      console.log("dangqianid", curEleId);
       state.currentElementId = curEleId;
     },
-    propChange(state, { key, value }) {
+    propChange(state, { key, value }: { key: string; value: string }) {
       // getters中的值在mutations中不可以直接用，需要重新写一遍。 要判断一下currentElement，但是不能用?.
       const currentElement = state.components.find((item) => item.id === state.currentElementId);
       if (currentElement) {
-        currentElement.props[key] = value;
+        // currentElement = value;
+        const newKey = key as keyof AllPropsType;
+        currentElement.props[newKey] = value;
       }
     },
   },

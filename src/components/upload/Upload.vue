@@ -19,7 +19,7 @@
       </slot>
     </div>
     <input type="file" :multiple="multiple" ref="fileInput" :style="{ display: 'none' }" @change="handleChange" />
-    <UploadList :listType="listType" :uploadList="uploadList" @deleteFile="deleteFile">
+    <UploadList v-if="showFileList" :listType="listType" :uploadList="uploadList" @deleteFile="deleteFile">
       <template v-slot:displayMode>
         <slot name="displayMode"></slot>
       </template>

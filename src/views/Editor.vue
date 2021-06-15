@@ -38,10 +38,12 @@ import ComponentLists from "@/components/ComponentList.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
+import XImage from "@/components/XImage.vue";
 import TextUpload from "@/components/TextUpload.vue";
 export default defineComponent({
   components: {
     XText,
+    XImage,
     ComponentLists,
     EditWrapper,
     FormTablue,

@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-upload
-      class="upload-demo"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      on-success="eleOnSuccess"
-      :on-error="eleOnError"
-    >
+    <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/">
       <el-button size="small" type="primary">点击上传3333</el-button>
     </el-upload>
     <Upload
@@ -67,23 +62,11 @@ export default defineComponent({
       console.log("onsuccess", res, file);
       // fileList.push(res.data);
     };
-    const eleOnSuccess = (response: any, file: File, fileList: FileList) => {
-      console.log("res", response);
-      console.log("file", file);
-      console.log("filelist", fileList);
-    };
 
-    const eleOnError = (err: any, file: File, fileList: FileList) => {
-      console.log("shibai");
-      console.log("res", err);
-      console.log("file", file);
-      console.log("filelist", fileList);
-    };
     return {
       fileList,
       beforeUpload,
       onprgress,
-      eleOnSuccess,
       onSuccess,
     };
   },

@@ -17,7 +17,7 @@ export const commonProps = {
   borderRadius: "0",
 };
 
-export const defaultProps = {
+export const textDefaultProps = {
   text: "正文内容",
   fontSize: "12px",
   fontStyle: "normal",
@@ -29,21 +29,25 @@ export const defaultProps = {
   ...commonProps,
 };
 
-export type defaultPropsType = typeof defaultProps;
+export const imageDefaultProps = {
+  src: "",
+  ...commonProps,
+};
 
-const obj = { a: "aa", b: "BBB" };
+// defaultProps
+export type textPropsType = typeof textDefaultProps;
+export type imagePropsType = typeof imageDefaultProps;
 
-export interface testProps {
-  a: string;
-  b: string;
-}
-const test = <T extends testProps>(o: T): string[] => Object.keys(o);
-test(obj);
+export type AllPropsType = textPropsType & imagePropsType;
+// export const pickStyleProps = <T extends textPropsType | imagePropsType>(props: T) =>
+//   without(Object.keys(props), "actionType", "url");
 
-export const pickStyleProps = <T extends defaultPropsType>(props: T) =>
+export const pickImageStyleProps = <T extends imagePropsType>(props: T) =>
+  without(Object.keys(props), "actionType", "url", "src");
+export const pickTextStyleProps = <T extends textPropsType>(props: T) =>
   without(Object.keys(props), "actionType", "url");
 
-export const transformToComponentProps = (props: defaultPropsType) => {
+export const transformToComponentProps = (props: textPropsType | imagePropsType) => {
   return mapValues(props, (item) => {
     return {
       type: item.constructor as StringConstructor,
@@ -52,4 +56,4 @@ export const transformToComponentProps = (props: defaultPropsType) => {
   });
 };
 
-export default defaultProps;
+// export default defaultProps;

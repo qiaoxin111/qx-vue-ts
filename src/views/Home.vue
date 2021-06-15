@@ -12,7 +12,7 @@
 
 <script lang="ts">
 // import { mapValues, pick } from "lodash";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store/index";
 import TempleteList from "@/components/TempleteList.vue";
@@ -31,7 +31,6 @@ export default defineComponent({
     const user = computed(() => store.state.user);
     console.log("user", user);
     console.log("testData");
-
     return {
       testData,
       user,

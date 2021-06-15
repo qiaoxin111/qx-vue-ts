@@ -1,4 +1,4 @@
-import { defaultPropsType } from "./defaultProps";
+import { textPropsType, imagePropsType } from "./defaultProps";
 export interface PropFormValueType {
   component: string;
   subComponent?: string;
@@ -8,6 +8,7 @@ export interface PropFormValueType {
   extraProps?: {
     [key: string]: any;
   };
+  isPic?: boolean;
   options?: { text: string; value: any }[];
   initialTranform?: (v: string) => any;
   finalTransform?: (v: string) => any;
@@ -16,8 +17,20 @@ export interface PropFormValueType {
     [key: string]: (v: any) => any;
   };
 }
+// type L = {
+//   a: string;
+//   b: string;
+// };
+// type K = {
+//   a: string;
+//   c: string;
+// };
+// export type M = L & K;
+// type Text = {};
+export type AllPropsType = textPropsType & imagePropsType;
 export type PropsFormType = {
-  [P in keyof defaultPropsType]?: PropFormValueType;
+  [P in keyof AllPropsType]?: PropFormValueType;
+  // [K in keyof imagePropsType]?: PropFormValueType;
 };
 
 export const propsForm: PropsFormType = {
@@ -39,7 +52,7 @@ export const propsForm: PropsFormType = {
       max: 3,
       step: 0.1,
     },
-    initialTranform: (v) => parseFloat(v),
+    initialTranform: (v: string) => parseFloat(v),
   },
   textAlign: {
     component: "a-radio-group",
@@ -65,5 +78,9 @@ export const propsForm: PropsFormType = {
   color: {
     component: "ColorPicker",
     text: "字体颜色",
+  },
+  src: {
+    component: "a-input",
+    text: "图片路径",
   },
 };

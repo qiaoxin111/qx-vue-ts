@@ -4,10 +4,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import defaultProps, { pickStyleProps, transformToComponentProps } from "../defaultProps";
+import { textDefaultProps, pickTextStyleProps, transformToComponentProps } from "../defaultProps";
 import useCommon from "@/hooks/useCommon";
-const stylePropsNames = pickStyleProps(defaultProps);
-const componentsProps = transformToComponentProps(defaultProps);
+const stylePropsNames = pickTextStyleProps(textDefaultProps);
+
+const componentsProps = transformToComponentProps(textDefaultProps);
+
 export default defineComponent({
   name: "XText",
   props: {

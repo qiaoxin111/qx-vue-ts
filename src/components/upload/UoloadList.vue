@@ -41,6 +41,14 @@ export default defineComponent({
       type: String as PropType<listTypeType>,
     },
   },
-  //   setup() {},
+  emits: ["deleteFile"],
+  setup(props, context) {
+    const deleteFile = (id: string) => {
+      context.emit("deleteFile", id);
+    };
+    return {
+      deleteFile,
+    };
+  },
 });
 </script>
