@@ -23,7 +23,11 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import { PropsFormType, propsForm, PropFormValueType } from "@/propsMap";
+import ColorPicker from "@/components/ColorPicker.vue";
 export default defineComponent({
+  components: {
+    ColorPicker,
+  },
   props: {
     props: {
       type: Object,

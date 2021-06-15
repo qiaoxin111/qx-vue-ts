@@ -1,5 +1,4 @@
 import { defaultPropsType } from "./defaultProps";
-
 export interface PropFormValueType {
   component: string;
   subComponent?: string;
@@ -62,5 +61,9 @@ export const propsForm: PropsFormType = {
       { text: "楷体", value: "'KaiTi', 'STKaiti'" },
       { text: "仿宋", value: "'FangSong', 'STFangsong'" },
     ],
+  },
+  color: {
+    component: "ColorPicker",
+    text: "字体颜色",
   },
 };

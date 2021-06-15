@@ -1,8 +1,6 @@
 <template>
   <div>
-    <a-button v-if="!user.isLogin" type="primary" @click="login"
-      >登录111{{ user }}</a-button
-    >
+    <a-button v-if="!user.isLogin" type="primary" @click="login">登录111{{ user }}</a-button>
     <a-dropdown v-else>
       <a-button type="primary"> {{ user.name }} <DownOutlined /></a-button>
       <template #overlay>

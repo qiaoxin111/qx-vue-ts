@@ -21,7 +21,11 @@ const testComponents: ComponentData[] = [
     name: "x-text",
     props: { text: "hello", fontSize: "12px", color: "red" },
   },
-  { id: uuidv4(), name: "x-text", props: { text: "hello1", fontSize: "14px", lineHeight: "1", textAlign: "center" } },
+  {
+    id: uuidv4(),
+    name: "x-text",
+    props: { text: "hello1", fontSize: "14px", lineHeight: "1", color: "#000", textAlign: "center" },
+  },
   { id: uuidv4(), name: "x-text", props: { text: "hello2", fontSize: "18px", lineHeight: "2", textAlign: "left" } },
   { id: uuidv4(), name: "x-text", props: { text: "hello3", fontSize: "14px", lineHeight: "1", fontFamily: "SimSun" } },
   {

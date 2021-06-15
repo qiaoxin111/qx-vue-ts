@@ -1,5 +1,6 @@
 <template>
   <div class="editor">
+    <Test></Test>
     <a-row>
       <a-col class="wraper" :span="6">
         组件列表
@@ -29,7 +30,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, onUpdated, watchEffect } from "vue";
+import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 import { ComponentData } from "@/store/editor";
 import { defaultTemplates } from "@/defaultTemplate";
@@ -37,6 +38,7 @@ import ComponentLists from "@/components/ComponentList.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
+import Test from "@/components/test.vue";
 
 export default defineComponent({
   components: {
@@ -44,6 +46,7 @@ export default defineComponent({
     ComponentLists,
     EditWrapper,
     FormTablue,
+    Test,
   },
 
   setup() {
