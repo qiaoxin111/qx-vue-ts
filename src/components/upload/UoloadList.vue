@@ -31,14 +31,15 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { uplodFileType, listTypeType } from "./Upload.vue";
+import { UploadFileType, ListTypeType } from "./Upload.vue";
 export default defineComponent({
   props: {
     uploadList: {
-      type: Array as PropType<uplodFileType[]>,
+      type: Array as PropType<UploadFileType[]>,
+      required: true,
     },
     listType: {
-      type: String as PropType<listTypeType>,
+      type: String as PropType<ListTypeType>,
     },
   },
   emits: ["deleteFile"],

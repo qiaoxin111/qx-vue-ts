@@ -45,7 +45,7 @@ export type AllPropsType = textPropsType & imagePropsType;
 export const pickImageStyleProps = <T extends imagePropsType>(props: T) =>
   without(Object.keys(props), "actionType", "url", "src");
 export const pickTextStyleProps = <T extends textPropsType>(props: T) =>
-  without(Object.keys(props), "actionType", "url");
+  without(Object.keys(props), "actionType", "url", "text");
 
 export const transformToComponentProps = (props: textPropsType | imagePropsType) => {
   return mapValues(props, (item) => {

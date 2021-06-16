@@ -9,7 +9,6 @@ import useCommon from "@/hooks/useCommon";
 const stylePropsNames = pickTextStyleProps(textDefaultProps);
 
 const componentsProps = transformToComponentProps(textDefaultProps);
-
 export default defineComponent({
   name: "XText",
   props: {
@@ -20,6 +19,7 @@ export default defineComponent({
     ...componentsProps,
   },
   setup(props) {
+    //TODO toRefs 使用
     const { styleProps, handleClick } = useCommon(props, stylePropsNames);
     return {
       styleProps,

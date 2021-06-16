@@ -55,6 +55,7 @@ export default defineComponent({
     // TODO 这里为什么不能自动补全
 
     const componentDataList = computed<ComponentData[]>(() => store.state.editor.components);
+    console.log("componentDataList", componentDataList);
     const currentCompId = computed(() => store.state.editor.currentElementId);
     const currentElement = computed(() => store.getters.currentElement);
 

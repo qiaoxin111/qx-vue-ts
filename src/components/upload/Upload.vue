@@ -45,10 +45,18 @@ export interface FileObjectType {
 }
 
 type ConfigType = AxiosRequestConfig;
-export type listTypeType = "text" | "picture";
+export type ListTypeType = "text" | "picture";
 
-export type uplodFileType = Partial<FileObjectType> & {
+export type ParentCompFileType = Partial<FileObjectType> & {
   name: string;
+  url: string;
+};
+
+export type UploadFileType = Partial<FileObjectType> & {
+  id: string;
+  name: string;
+  status: string;
+  url: string;
 };
 
 export default defineComponent({
@@ -73,11 +81,11 @@ export default defineComponent({
       default: true,
     },
     listType: {
-      type: String as PropType<listTypeType>,
+      type: String as PropType<ListTypeType>,
       default: "text",
     },
     fileList: {
-      type: Array as PropType<uplodFileType[]>,
+      type: Array as PropType<ParentCompFileType[]>,
       default: () => [],
     },
     beforeUpload: {
@@ -87,7 +95,7 @@ export default defineComponent({
       type: Function as PropType<(e: ProgressEvent, file: FileObjectType, fileList: FileObjectType[]) => void>,
     },
     onSuccess: {
-      type: Function as PropType<(res: any, file: FileObjectType, filelist: uplodFileType[]) => void>,
+      type: Function as PropType<(res: any, file: FileObjectType, filelist: UploadFileType[]) => void>,
     },
     onError: {
       type: Function as PropType<(err: Error, file: FileObjectType, filelist: FileObjectType[]) => void>,
@@ -95,18 +103,21 @@ export default defineComponent({
   },
   setup(props) {
     const fileInput = ref<HTMLInputElement | null>(null);
-    const uploadList = ref<uplodFileType[]>([]);
+    const uploadList = ref<UploadFileType[]>([]);
     let isDrageOver = ref(false);
 
     // 即便上传文件的时候父组件没有传入新的fileList,uploadList 也应该是响应式的，
     watch(
       () => props.fileList,
-      (fileList: uplodFileType[]) => {
+      (fileList: ParentCompFileType[]) => {
         uploadList.value = fileList.map((file) => {
+          if (!file.url && file.file) {
+            file.url = URL.createObjectURL(file.file);
+          }
           const cloneFile = cloneDeep(file);
           return {
             ...cloneFile,
-            uid: file.id || uuid(),
+            id: file.id || uuid(),
             status: file.status || "success",
           };
         });
@@ -134,7 +145,7 @@ export default defineComponent({
       formdata.append("name", file.name);
       formdata.append("file", file);
 
-      const uploadFile: FileObjectType = reactive({
+      const uploadFile: UploadFileType = reactive({
         id: uuid(),
         name: file.name,
         size: file.size,

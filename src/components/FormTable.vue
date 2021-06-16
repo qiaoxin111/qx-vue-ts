@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- <a-input placeholder="Basic usage" value="111" @change="changeValue" /> -->
-
     <div class="prop" v-for="(item, index) in formTableList" :key="index">
       <span class="name">{{ item.text }}</span>
       <component
@@ -22,11 +20,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, watch, ref } from "vue";
+import { defineComponent, computed } from "vue";
 import { PropsFormType, propsForm, PropFormValueType } from "@/propsMap";
 import ColorPicker from "@/components/ColorPicker.vue";
 import Upload from "@/components/upload/Upload.vue";
-import { cloneDeep } from "lodash-es";
 export default defineComponent({
   components: {
     ColorPicker,
@@ -92,7 +89,7 @@ export default defineComponent({
           item.eventName = item.eventName ? item.eventName : "change";
           item.events = {
             [item.eventName]: (e: any) => {
-              console.log("调用change方法", e.target.value);
+              // a-input-number change事件返回值是number | string， a-inputchange事件返回值是event
               context.emit("change", {
                 key,
                 value: item.finalTransform ? item.finalTransform(e?.target?.value || e) : e?.target?.value || e,

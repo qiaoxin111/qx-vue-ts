@@ -20,7 +20,7 @@
 import { defineComponent, reactive, ref } from "vue";
 import Upload from "@/components/upload/Upload.vue";
 
-import { uplodFileType } from "@/components/upload/Upload.vue";
+import { UploadFileType } from "@/components/upload/Upload.vue";
 
 interface fileShowType {
   url: string;
@@ -58,7 +58,7 @@ export default defineComponent({
     const onprgress = (progress: ProgressEvent) => {
       console.log("onprogress", progress);
     };
-    const onSuccess = (res: any, file: uplodFileType) => {
+    const onSuccess = (res: any, file: UploadFileType) => {
       console.log("onsuccess", res, file);
       // fileList.push(res.data);
     };
