@@ -44,7 +44,6 @@ export default defineComponent({
       },
     ]);
     const beforeUpload = (file: File) => {
-      console.log("file", file);
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {

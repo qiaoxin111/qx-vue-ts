@@ -10,4 +10,8 @@
   text-align: center;
   color: #2c3e50;
 }
+p {
+  padding: 0px;
+  margin: 0px;
+}
 </style>

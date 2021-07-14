@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <TextUpload></TextUpload>
+    <!-- <TextUpload></TextUpload> -->
     <a-row>
       <a-col class="wraper" :span="6">
         <h3>组件列表</h3>
@@ -8,10 +8,12 @@
       </a-col>
       <a-col :span="12" class="draw-content">
         <div>画布区域</div>
-        <div class="draw-content-inner">
+        <div class="draw-content-inner" :style="pageData.props">
           <EditWrapper
             class="componentCur"
             v-for="item in componentDataList"
+            :isShow="item.isShow"
+            :isLock="item.isLock"
             :key="item.id"
             :id="item.id"
             :active="currentCompId === item.id"
@@ -22,9 +24,27 @@
         </div>
       </a-col>
       <a-col class="wraper" :span="6">
-        <div class="title">组件属性</div>
-        {{ currentElement }}
-        <FormTablue v-if="currentElement" :props="currentElement.props" @change="propChange"></FormTablue>
+        <a-tabs default-active-key="1">
+          <a-tab-pane key="1" tab="组件属性">
+            {{ currentElement }}
+            <FormTablue
+              v-if="currentElement"
+              :isLock="currentElement.isLock"
+              :props="currentElement.props"
+              @change="propChange"
+            ></FormTablue>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="图层设置" force-render>
+            <LayerList
+              :components="componentDataList"
+              @change="propChange"
+              @changComponentsList="changComponentsList"
+            ></LayerList>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="页面设置">
+            <FormTablue :props="pageData.props" @change="pageChange" :isPage="true"></FormTablue>
+          </a-tab-pane>
+        </a-tabs>
       </a-col>
     </a-row>
   </div>
@@ -40,6 +60,7 @@ import FormTablue from "@/components/FormTable.vue";
 import XText from "@/components/XText.vue";
 import XImage from "@/components/XImage.vue";
 import TextUpload from "@/components/TextUpload.vue";
+import LayerList from "@/components/LayerList.vue";
 export default defineComponent({
   components: {
     XText,
@@ -48,20 +69,19 @@ export default defineComponent({
     EditWrapper,
     FormTablue,
     TextUpload,
+    LayerList,
   },
 
   setup() {
     const store = useStore();
     // TODO 这里为什么不能自动补全
-
     const componentDataList = computed<ComponentData[]>(() => store.state.editor.components);
+    const pageData = computed(() => store.state.editor.page);
     console.log("componentDataList", componentDataList);
     const currentCompId = computed(() => store.state.editor.currentElementId);
     const currentElement = computed(() => store.getters.currentElement);
 
-    console.log("当前的", currentElement);
     const addItem = (props: any) => {
-      console.log("props", props);
       store.commit("addComp", props);
     };
     const changeCurEle = (id: string) => {
@@ -69,6 +89,12 @@ export default defineComponent({
     };
     const propChange = (data: any) => {
       store.commit("propChange", data);
+    };
+    const changComponentsList = (data: ComponentData[]) => {
+      store.commit("changeComponents", data);
+    };
+    const pageChange = (data: any) => {
+      store.commit("chagnePage", data);
     };
 
     return {
@@ -79,6 +105,9 @@ export default defineComponent({
       addItem,
       changeCurEle,
       propChange,
+      changComponentsList,
+      pageData,
+      pageChange,
     };
   },
 });

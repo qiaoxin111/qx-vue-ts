@@ -1,7 +1,8 @@
 <template>
-  <div :class="{ active: active }" @click="changeCurrentComponent()">
+  <div v-if="isShow" :class="{ active: active }" @click="changeCurrentComponent()">
     <slot></slot>
   </div>
+  <div v-else></div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
@@ -16,10 +17,17 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    isShow: {
+      type: Boolean,
+      required: true,
+    },
+    isLock: {
+      type: Boolean,
+      required: true,
+    },
   },
   emits: ["changeCurEle"],
   setup(props, context) {
-    // const store = useStore();
     const changeCurrentComponent = () => {
       context.emit("changeCurEle", props.id);
     };

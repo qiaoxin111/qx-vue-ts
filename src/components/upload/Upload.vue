@@ -128,13 +128,11 @@ export default defineComponent({
       }
     );
 
-    console.log("uploadList", uploadList);
     const uploadStatus = computed(() => {
       return uploadList.value.some((item) => item.status === "uploading");
     });
 
     const triggerClick = () => {
-      console.log(fileInput.value);
       if (fileInput.value) {
         fileInput.value.click();
       }
@@ -169,7 +167,6 @@ export default defineComponent({
       }
 
       uploadList.value.push(uploadFile);
-      console.log("增加一条", uploadList);
 
       const onUploadProgress = (progress: ProgressEvent) => {
         uploadFile.percent = Math.floor((progress.loaded * 100) / progress.total);
@@ -188,7 +185,6 @@ export default defineComponent({
         .then((res) => {
           if (res.status === 200) {
             uploadFile.status = "success";
-            console.log("更新l", uploadList);
             if (props.onSuccess) {
               props.onSuccess(res, uploadFile, uploadList.value);
             }
@@ -216,7 +212,6 @@ export default defineComponent({
     };
 
     const dragMove = (evt: DragEvent, enter: boolean) => {
-      console.log(33333);
       evt.preventDefault();
       isDrageOver.value = enter;
     };
@@ -237,9 +232,7 @@ export default defineComponent({
     const dropEvent = (evt: DragEvent) => {
       evt.preventDefault();
       isDrageOver.value = false;
-      console.log("drag数据", evt.dataTransfer);
       const files = evt.dataTransfer?.files;
-      console.log("files", files);
       if (!files) return;
       isMutileUpload(files);
     };
