@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div v-if="isLock">组件已经锁定，无法更改</div>
-    <div v-else class="prop" v-for="(item, index) in formTableList" :key="index">
+    <div class="prop" v-for="(item, index) in formTableList" :key="index">
       <span class="name">{{ item.text }}</span>
       <component
         class="ele"
@@ -34,10 +33,6 @@ export default defineComponent({
   props: {
     props: {
       type: Object,
-      required: true,
-    },
-    isLock: {
-      type: Boolean,
       required: true,
     },
     isPage: {

@@ -13,8 +13,12 @@ export const commonProps = {
   // border type
   borderStyle: "none",
   borderColor: "#000",
-  borderWidth: "0",
-  borderRadius: "0",
+  borderWidth: "0px",
+  borderRadius: "0px",
+  // postion
+  position: "absolute",
+  left: "0px",
+  top: "0px",
 };
 
 export const textDefaultProps = {

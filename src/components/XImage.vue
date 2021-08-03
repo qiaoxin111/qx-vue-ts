@@ -9,7 +9,7 @@ import useCommon from "@/hooks/useCommon";
 const stylePropsNames = pickImageStyleProps(imageDefaultProps);
 const componentsProps = transformToComponentProps(imageDefaultProps);
 export default defineComponent({
-  name: "XText",
+  name: "XImage",
   props: {
     tag: {
       type: String,

@@ -18,6 +18,7 @@ import { GlobalDataProps } from "../store/index";
 import TempleteList from "@/components/TempleteList.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import axios from "axios";
+
 export default defineComponent({
   name: "Home",
   components: {

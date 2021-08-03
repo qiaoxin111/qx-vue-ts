@@ -12,7 +12,18 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-const colorArray = ["#fff", "#d02d35", "#dc4a2d", "#f2dc52", "#78d047", "#428af1", "#5a27bc", "#817f82", "#000000", ""];
+const colorArray = [
+  "#ffffff",
+  "#d02d35",
+  "#dc4a2d",
+  "#f2dc52",
+  "#78d047",
+  "#428af1",
+  "#5a27bc",
+  "#817f82",
+  "#000000",
+  "",
+];
 export default defineComponent({
   props: {
     value: {

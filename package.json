@@ -17,6 +17,7 @@
     "cropperjs": "^1.5.12",
     "element-plus": "^1.0.2-beta.48",
     "fork-ts-checker-webpack-plugin": "^6.2.10",
+    "hotkeys-js": "^3.8.7",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.0",
     "uuid": "^8.3.2",
