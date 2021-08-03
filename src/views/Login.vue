@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>建站工具</div>
+    <div>登录</div>
   </div>
 </template>
 <script lang="ts">
